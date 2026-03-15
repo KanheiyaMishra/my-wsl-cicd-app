@@ -1,0 +1,32 @@
+name: WSL CI-CD with Notifications
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install & Test
+        run: |
+          npm install
+          npm test
+
+  deploy:
+    needs: build-and-test
+    runs-on: self-hosted
+    steps:
+      - name: Kill Old Server & Start New
+        run: |
+          fuser -k 3000/tcp || true
+          nohup node server.js > output.log 2>&1 &
+          
+      - name: Notify Discord
+        if: always()
+        run: |
+          curl -X POST -H "Content-Type: application/json" \
+          -d "{\"content\": \"🚀 **Build Status:** ${{ job.status }} \n**Repo:** ${{ github.repository }} \n**Branch:** ${{ github.ref_name }}\"}" \
+          ${{ secrets.DISCORD_WEBHOOK }}
