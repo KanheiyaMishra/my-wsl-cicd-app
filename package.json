@@ -1,0 +1,17 @@
+{
+  "name": "wsl-cicd-demo",
+  "version": "1.0.0",
+  "description": "WSL GitHub Runner Demo",
+  "main": "server.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0",
+    "supertest": "^6.3.3"
+  }
+}
